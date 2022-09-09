@@ -44,8 +44,8 @@ const _ = require('lodash');
 const calculateValueForMove = (move, arena) => {
   let {dims, state} = arena
   let newState = _.cloneDeep(state)
-  applyMove(newState, move)
-  console.log()
+  newState = applyMove(newState, move)
+  console.log(newState)
   let player = state[MY_URL]
   let nearestEnemy = null
   let nearestEnemyDistance = null
@@ -67,6 +67,7 @@ const calculateValueForMove = (move, arena) => {
 
   console.log(`Nearest enemy distance: ${nearestEnemyDistance}`)
   console.log(`Number of hit enemy: ${numberOfHitEnemies}`)
+  console.log(`Move value: ${(-nearestEnemyDistance ) + (numberOfHitEnemies * 10) + (playerWasHit * 5)}`)
   return (-nearestEnemyDistance ) + (numberOfHitEnemies * 10) + (playerWasHit * 5)
 }
 
@@ -86,7 +87,7 @@ const calculateDirectionToEnemy = (player, enemy) => {
   } else if(playerY > enemyY) {
     verticalDirection = 'S'
   }
-  let horizontalDirection = playerX < enemyX ? 'E' : 'W'
+  let horizontalDirection = null
   if(playerX < enemyX) {
     horizontalDirection = 'E'
   } else if(playerX > enemyX) {
@@ -107,6 +108,7 @@ const enemyInShootingRange = (player, enemy) => {
   let {direction: playerDirection } = player
   let {direction: enemyDirection } = enemy
   let directionToEnemy = calculateDirectionToEnemy(player, enemy)
+  console.log(`Direction to enemy: ${directionToEnemy}`)
   return directionToEnemy === playerDirection && calculateDistanceBetweenPlayers(player, enemy) <= 3
 }
 
@@ -114,8 +116,6 @@ const playerInShootingRange = (player, enemy) => {}
 
 const applyMove = (state, move) => {
   let player = state[MY_URL]
-  console.log(`State is`)
-  console.log(state)
   switch(move) {
     case 'F':
       let x = 0
@@ -159,6 +159,7 @@ const applyMove = (state, move) => {
         state[MY_URL].direction = Directions.S
       break
   }
+  return state
 }
 
 const Directions = {
