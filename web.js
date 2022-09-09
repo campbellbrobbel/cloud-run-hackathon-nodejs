@@ -56,7 +56,7 @@ const calculateValueForMove = (move, arena) => {
     if(enemy !== MY_URL) {
       let enemyDistance = calculateDistanceBetweenPlayers(player, newState[enemy])
       let enemyDirection = calculateDirectionToEnemy(player, newState[enemy])
-      if(!nearestEnemyDistance) {
+      if(!nearestEnemyDistance || nearestEnemyDistance > enemyDistance) {
         nearestEnemyDistance = enemyDistance
       }
       if(newState[enemy].wasHit) {
