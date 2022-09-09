@@ -45,6 +45,7 @@ const calculateValueForMove = (move, arena) => {
   let {dims, state} = arena
   let newState = _.cloneDeep(state)
   applyMove(newState, move)
+  console.log()
   let player = state[MY_URL]
   let nearestEnemy = null
   let nearestEnemyDistance = null
@@ -113,7 +114,8 @@ const playerInShootingRange = (player, enemy) => {}
 
 const applyMove = (state, move) => {
   let player = state[MY_URL]
-
+  console.log(`State is`)
+  console.log(state)
   switch(move) {
     case 'F':
       let x = 0
@@ -130,7 +132,7 @@ const applyMove = (state, move) => {
       state[MY_URL].y += y
       break
     case 'T':
-      for(let enemy of state) {
+      for(let enemy in state) {
         if(enemy !== MY_URL && enemyInShootingRange(player, state[enemy])) {
           state[enemy].wasHit = true
         }
