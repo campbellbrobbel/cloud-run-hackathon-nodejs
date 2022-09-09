@@ -34,6 +34,8 @@ app.post('/', function (req, res) {
       }
     }
   })
+
+  console.log(`Making move: ${moves[bestMove]}`)
   res.send(moves[bestMove]);
 });
 
