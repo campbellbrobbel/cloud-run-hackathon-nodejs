@@ -64,7 +64,10 @@ const calculateValueForMove = (move, arena) => {
       }
     }
   }
-  return (nearestEnemyDistance ) + (numberOfHitEnemies * 10)
+
+  console.log(`Nearest enemy distance: ${nearestEnemyDistance}`)
+  console.log(`Number of hit enemy: ${numberOfHitEnemies}`)
+  return (-nearestEnemyDistance ) + (numberOfHitEnemies * 10)
 }
 
 
