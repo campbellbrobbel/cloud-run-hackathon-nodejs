@@ -72,14 +72,14 @@ const calculateValueForMove = (move, arena) => {
 
 
 const calculateDistanceBetweenPlayers = (player, enemy) => {
-  let {playerX, playerY } = player
-  let {enemyX, enemyY } = enemy
+  let {x:playerX, y:playerY } = player
+  let {x: enemyX, y: enemyY } = enemy
   return Math.abs(playerX - enemyX) + Math.abs(playerY - enemyY)
 }
 
 const calculateDirectionToEnemy = (player, enemy) => {
-  let {playerX, playerY } = player
-  let {enemyX, enemyY } = enemy
+  let {x:playerX, y:playerY } = player
+  let {x: enemyX, y: enemyY } = enemy
   let verticalDirection = null
   if(playerY < enemyY) {
     verticalDirection = ' N'
