@@ -49,9 +49,8 @@ const calculateValueForMove = (move, arena) => {
   let nearestEnemy = null
   let nearestEnemyDistance = null
   let numberOfHitEnemies = 0
-  let enemyDetails = {
+  let playerWasHit = player.wasHit ? 1: 0
 
-  }
   for(let enemy in newState) {
     if(enemy !== MY_URL) {
       let enemyDistance = calculateDistanceBetweenPlayers(player, newState[enemy])
@@ -67,7 +66,7 @@ const calculateValueForMove = (move, arena) => {
 
   console.log(`Nearest enemy distance: ${nearestEnemyDistance}`)
   console.log(`Number of hit enemy: ${numberOfHitEnemies}`)
-  return (-nearestEnemyDistance ) + (numberOfHitEnemies * 10)
+  return (-nearestEnemyDistance ) + (numberOfHitEnemies * 10) + (playerWasHit * 5)
 }
 
 
@@ -82,9 +81,9 @@ const calculateDirectionToEnemy = (player, enemy) => {
   let {x: enemyX, y: enemyY } = enemy
   let verticalDirection = null
   if(playerY < enemyY) {
-    verticalDirection = ' N'
+    verticalDirection = 'N'
   } else if(playerY > enemyY) {
-    verticalDirection = ' S'
+    verticalDirection = 'S'
   }
   let horizontalDirection = playerX < enemyX ? 'E' : 'W'
   if(playerX < enemyX) {
@@ -102,6 +101,15 @@ const calculateDirectionToEnemy = (player, enemy) => {
   return directionString
 
 }
+
+const enemyInShootingRange = (player, enemy) => {
+  let {direction: playerDirection } = player
+  let {direction: enemyDirection } = enemy
+  let directionToEnemy = calculateDirectionToEnemy(player, enemy)
+  return directionToEnemy === playerDirection && calculateDistanceBetweenPlayers(player, enemy) <= 3
+}
+
+const playerInShootingRange = (player, enemy) => {}
 
 const applyMove = (state, move) => {
   let player = state[MY_URL]
@@ -122,14 +130,11 @@ const applyMove = (state, move) => {
       state[MY_URL].y += y
       break
     case 'T':
-      // if(player.direction === Directions.N)
-      //   state[MY_URL].direction = Directions.W
-      // else if(player.direction === Directions.W)
-      //   state[MY_URL].direction = Directions.S
-      // else if(player.direction === Directions.S)
-      //   state[MY_URL].direction = Directions.E
-      // else if(player.direction === Directions.E)
-      //   state[MY_URL].direction = Directions.N
+      for(let enemy of state) {
+        if(enemy !== MY_URL && enemyInShootingRange(player, state[enemy])) {
+          state[enemy].wasHit = true
+        }
+      }
       break
     case 'L':
       if(player.direction === Directions.N)
