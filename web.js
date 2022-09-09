@@ -86,9 +86,9 @@ const calculateDirectionToEnemy = (player, enemy) => {
   let {x: enemyX, y: enemyY } = enemy
   let verticalDirection = null
   if(playerY < enemyY) {
-    verticalDirection = 'N'
-  } else if(playerY > enemyY) {
     verticalDirection = 'S'
+  } else if(playerY > enemyY) {
+    verticalDirection = 'N'
   }
   let horizontalDirection = null
   if(playerX < enemyX) {
@@ -123,9 +123,9 @@ const applyMove = (state, move) => {
       let x = 0
       let y = 0
       if(player.direction === Directions.N)
-        y += 1
-      else if(player.direction === Directions.S)
         y -= 1
+      else if(player.direction === Directions.S)
+        y += 1
       else if(player.direction === Directions.E)
         x += 1
       else if(player.direction === Directions.W)
