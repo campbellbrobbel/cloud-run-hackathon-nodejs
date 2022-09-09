@@ -36,6 +36,7 @@ app.post('/', function (req, res) {
   })
 
   console.log(`Making move: ${moves[bestMove]}`)
+  console.log(moveValues)
   res.send(moves[bestMove]);
 });
 
@@ -44,20 +45,22 @@ app.listen(process.env.PORT || 8080);
 const _ = require('lodash');
 
 const calculateValueForMove = (move, arena) => {
+  console.log(`Calculating move: ${move}`)
   let {dims, state} = arena
   let newState = _.cloneDeep(state)
   newState = applyMove(newState, move)
   console.log(newState)
-  let player = state[MY_URL]
+  let player = newState[MY_URL]
   let nearestEnemy = null
   let nearestEnemyDistance = null
   let numberOfHitEnemies = 0
   let playerWasHit = player.wasHit ? 1: 0
-
+  let playerIsFacingEnemy = false
   for(let enemy in newState) {
     if(enemy !== MY_URL) {
       let enemyDistance = calculateDistanceBetweenPlayers(player, newState[enemy])
       let enemyDirection = calculateDirectionToEnemy(player, newState[enemy])
+      playerIsFacingEnemy = player.direction === enemyDirection
       if(!nearestEnemyDistance || nearestEnemyDistance > enemyDistance) {
         nearestEnemyDistance = enemyDistance
       }
@@ -67,10 +70,8 @@ const calculateValueForMove = (move, arena) => {
     }
   }
 
-  console.log(`Nearest enemy distance: ${nearestEnemyDistance}`)
-  console.log(`Number of hit enemy: ${numberOfHitEnemies}`)
-  console.log(`Move value: ${(-nearestEnemyDistance ) + (numberOfHitEnemies * 10) + (playerWasHit * 5)}`)
-  return (-nearestEnemyDistance ) + (numberOfHitEnemies * 10) + (playerWasHit * 5)
+  console.log(`Nearest enemy distance ${nearestEnemyDistance} for move ${move}`)
+  return (-nearestEnemyDistance ) + (numberOfHitEnemies * 10) + (playerWasHit * 5) + (playerIsFacingEnemy ? 10 : 0)
 }
 
 
@@ -110,7 +111,6 @@ const enemyInShootingRange = (player, enemy) => {
   let {direction: playerDirection } = player
   let {direction: enemyDirection } = enemy
   let directionToEnemy = calculateDirectionToEnemy(player, enemy)
-  console.log(`Direction to enemy: ${directionToEnemy}`)
   return directionToEnemy === playerDirection && calculateDistanceBetweenPlayers(player, enemy) <= 3
 }
 
